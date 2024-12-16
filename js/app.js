@@ -93,9 +93,12 @@ class Game {
         this.bestSCore = document.getAnimations('bestScore')
         this.freezeColorDisplay = document.getElementById('freezeColorDisplay')
         this.freezeColor= ''
+        this.hasWon = false
         this.colors = [
             'blue', 'yellow', 'red', 'orange', 'purple', 'green','brown', 'gray', 'white',
         ]
+        this.matches = 0
+        this.matchDisplay = document.getElementById('matchDisplay') 
 
         this.boxes = [
         {
@@ -141,7 +144,7 @@ class Game {
     init() {
         this.getFreezeColor()
         this.makeBoxes()
-
+        this.getMatches()
     }
 
     makeBoxes() {
@@ -154,20 +157,32 @@ class Game {
             box.style.width = '200px'
             box.style.height = '200px'
             box.style.backgroundColor = el.color
-            console.log(`Box ${el.id} made`)
+            
+            //console.log(`Box ${el.id} made`)
 
             this.addToGameboard(this.gameBoard, box)
-
-            if(box.style.backgroundColor != this.freezeColor) {
+            this.showMatches()
 
                 this.changeColor(box, this.boxes)
-            }
+            
         })
+    }
+
+    getMatches() {
+        for(let i = 0; i < this.boxes.length; i++) {
+            if(this.freezeColor == this.boxes[i].color) {
+                this.matches++
+                this.showMatches()
+            }
+        }
+    }
+
+    showMatches() {
+        this.matchDisplay.innerText = this.matches
     }
 
     addToGameboard(parent, child) {
         return parent.appendChild(child)
-
     }
 
     getFreezeColor() {
@@ -178,21 +193,40 @@ class Game {
 
     changeColor(element, arr) {
         element.addEventListener('click', ()=> {
-            this.count++
-            this.countDisplay.innerText = this.count
-            // element.style.backgroundColor = this.colors[Math.floor(Math.random() *
-             //this.colors.length)]
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].id == element.dataset.id) {
-                //console.log(arr[i].color)
-                    arr[i].color = this.colors[Math.floor(Math.random() * this.colors.length)]
 
+                // test freezeColor here 
+                    if (this.freezeColor !=arr[i].color) {        
+                    this.count++
+                    this.countDisplay.innerText = this.count
+                    
+                    arr[i].color = this.colors[Math.floor(Math.random() * this.colors.length)]
+                    this.colors.length    
                     element.style.backgroundColor = arr[i].color
+
+                        if  (arr[i].color == this.freezeColor) {
+                            this.matches++
+                            this.showMatches()
+                        }
+                    }
                 }
+                
             }
+                this.checkWin()
         })
     }
+    checkWin() {
+        if(this.matches == 9) {
+            this.hasWon = !this.hasWon
+
+            console.log(this.hasWon)
+        }
+    }
 }
+    
+
+
 
 const action = new Game()
 action.init()
