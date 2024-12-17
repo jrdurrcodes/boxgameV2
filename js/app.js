@@ -90,7 +90,7 @@ class Game {
         this.count = 0
         this.gameBoard = document.getElementById('gameBoard')
         this.countDisplay = document.getElementById('countDisplay')
-        this.bestSCore = document.getElementById('bestScore')
+        this.bestScore = document.getElementById('bestScore')
         this.freezeColorDisplay = document.getElementById('freezeColorDisplay')
         this.message = document.getElementById('message')
         this.freezeColor= ''
@@ -103,44 +103,49 @@ class Game {
         this.matchDisplay = document.getElementById('matchDisplay') 
         
         this.boxes = [
-        {
-            id: 1,
-            color: this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id: 2,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id: 3,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id : 4,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id : 5,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id : 6,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id : 7,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
-            id : 8,
-            color:  this.colors[Math.floor(Math.random() * this.colors.length)]
-        },
-        {
+            {
+                id: 1,
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id: 2,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id: 3,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id : 4,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id : 5,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id : 6,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id : 7,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
+                id : 8,
+                color:  this.colors[Math.floor(Math.random() * this.colors.length)]
+            },
+            {
             id : 9,
             color:  this.colors[Math.floor(Math.random() * this.colors.length)]
             }
         ]
-        
+
+        this.scores = { 
+            prevScore: 0,
+            currScore: 0,
+            bestScore: 0
+        }
     }
 
     init() {
@@ -203,6 +208,7 @@ class Game {
                 // test freezeColor here 
                     if (this.freezeColor !=arr[i].color) {        
                     this.count++
+                    this.scores.currScore = this.count
                     this.countDisplay.innerText = this.count
                     
                     arr[i].color = this.colors[Math.floor(Math.random() * this.colors.length)]
@@ -227,7 +233,23 @@ class Game {
             this.message.innerText = `You win and it took ${this.count} clicks!`
             this.gameBoard.innerHTML = ''
             this.gamePlay = false
+            this.setScores()
         }
+    }
+
+    setScores() {
+
+        this.scores.prevScore = this.scores.currScore
+        this.scores.currScore = this.count
+        
+        if (this.count < this.scores.bestScore && this.count > 0) {
+            bestScore = this.count
+        } else { 
+            this.scores.bestScore = this.scores.currScore
+        }
+        
+        // this.scores.bestScore = bestScore
+        this.bestScore.innerText = this.scores.bestScore
     }
 
     resetGame() {
@@ -240,7 +262,7 @@ class Game {
         this.gamePlay = !this.gamePlay
         this.hasWon = false
         this.init()
-
+    
     }
     resetBoxes () { 
         this.boxes = [
@@ -283,8 +305,6 @@ class Game {
         ]
     }
 }
-    
-
 
 // const action = new Game()
 
